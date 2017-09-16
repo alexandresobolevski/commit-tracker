@@ -30,8 +30,9 @@ $(commit-tracker-directory)/.commitTracker.log 2>&1
 echo $(cat /Users/alexandresobolevski/Workstation/.commitTally.txt | awk 'END {print $NF}') 'Commit(s)'
 ```
 
-### Related article 
+### Examples
 
+Display in the menu bar the number of commits contributed to a project
 [Blog Post](https://wordpress.com/post/alexandresobolevski.blog/338)
 
 
