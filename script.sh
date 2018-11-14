@@ -32,7 +32,6 @@ output=".commitHistory.txt"
 tallyOutput=".commitTally.txt"
 
 today=$(date +%Y-%m-%d)
-sum=0
 
 function getLastEntry {
 	last_entry=$(cat "$output" | grep " $1 " | tail -n -1)
@@ -41,21 +40,22 @@ function getLastEntry {
 
 function lastNoCommits {
 	lastNumber=$(getLastEntry $1 | egrep -o " [0-9]+")
-    if [ -z $lastNumber ]; then
-        lastNumber="0"
-    fi
+  # echo "last number $lastNumber"
+  if [[ -z $lastNumber ]]; then
+      lastNumber="0"
+  fi
 	echo "$lastNumber"
 }
 
 function gitShortlogCustom {
-	echo "$(git --no-pager shortlog -ns HEAD | grep $name | egrep -o "[0-9]+")"
+	echo "$(git --no-pager shortlog -ns HEAD | grep "$name" | egrep -o "[0-9]+")"
 }
 
 function getUserCommitsForProject {
 	cd "$d/$1"
 	commits=$(gitShortlogCustom)
 	cd ..
-	if [ -z $commits ]; then
+	if [[ -z $commits ]]; then
 		commits="0"
 	fi
 	echo "$commits"
@@ -67,24 +67,31 @@ function newCount {
 		echo ">>> $folder <<<"
 		project=${folder%?}
 		# Obtain the number of commits for the project
-		commits=$(getUserCommitsForProject $folder)
+		latestCommits=$(getUserCommitsForProject $folder)
+    echo "latest commit tally: |$latestCommits|"
 		# Get the date of the latests number of commits
 		# if date is not the same, update the commits file for
 		# this project
-		latest=$(getLastEntry "$project")
-		latestDate=${latest:0:10}
-		echo "found $commits"
-		if [[ $latestDate != $today ]]; then
-			echo "$today $project $commits" >> "$output"
+		lastEntry=$(getLastEntry "$project")
+    echo "lastEntry |$lastEntry|"
+		lastEntryDate=${lastEntry:0:10}
+		if [[ $lastEntryDate != $today ]]; then
+			echo "$today $project $latestCommits" >> "$output"
 		fi
-		echo "last number of commits $(lastNoCommits $project)"
-		difference=$(expr $commits - $(lastNoCommits $project))
+
+    currentNoCommits=$(lastNoCommits "$project")
+		echo "current commit tally: |$currentNoCommits|"
+    difference="$latestCommits $currentNoCommits"
+    echo "difference string |$difference|"
+		difference=`expr $latestCommits + $currentNoCommits`
 		echo "difference $difference"
-		sum=$(expr $difference + $sum)
+  	if [[ ! -z $difference ]]; then
+      sum=$(expr ${difference} + ${sum})
+  	fi
 	done
 }
 
-sum=0
+sum="0"
 echo "*************************"
 echo "Your commits for today..."
 newCount
