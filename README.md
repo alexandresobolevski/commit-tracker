@@ -14,10 +14,7 @@ $ crontab -e
 And assuming knowing the directory that contains the repositories that you wish to track `$(directory-with-repositories-to-track)`, add a new cron job at the end of the file that would look something like this:
 
 ```bash
-*/1     *       *       *       *       
-$(commit-tracker-directory)/.commitTracker.sh -d 
-$(directory-with-repositories-to-track) -n Sobolevski > 
-$(commit-tracker-directory)/.commitTracker.log 2>&1
+*/1 * * * * ~/Workstation/commit-tracker/script.sh -d ~/Workstation -n Alexandre\ Sobolevski > ~/Workstation/commit-tracker/.commitTracker.log 2>&1
 ```
 
 - See total commits contributed since beginning of the day
@@ -36,6 +33,6 @@ Display in the menu bar the number of commits contributed to a project
 [Blog Post](https://wordpress.com/post/alexandresobolevski.blog/338)
 
 
-### License 
+### License
 
 MIT

@@ -28,6 +28,7 @@ echo "n = ${n}"
 cd $d
 
 name="$n"
+# Relative to the workspace directory
 output=".commitHistory.txt"
 tallyOutput=".commitTally.txt"
 
@@ -48,7 +49,7 @@ function lastNoCommits {
 }
 
 function gitShortlogCustom {
-	echo "$(git --no-pager shortlog -ns HEAD | grep "$name" | egrep -o "[0-9]+")"
+	echo "$(git --no-pager shortlog -ns HEAD | grep "$name" | egrep -o '[0-9]+')"
 }
 
 function getUserCommitsForProject {
