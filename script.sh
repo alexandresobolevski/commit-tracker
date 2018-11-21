@@ -84,7 +84,7 @@ function newCount {
 		echo "current commit tally: |$currentNoCommits|"
     difference="$latestCommits $currentNoCommits"
     echo "difference string |$difference|"
-		difference=`expr $latestCommits + $currentNoCommits`
+		difference=`expr $latestCommits - $currentNoCommits`
 		echo "difference $difference"
   	if [[ ! -z $difference ]]; then
       sum=$(expr ${difference} + ${sum})
